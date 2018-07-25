@@ -1,0 +1,36 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Hello{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Hello World!</h1>
+        <label for="name">name：</label>
+        <input id="name" type="text" size="20" />
+        <button id="btn">send</button>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+$(function() {
+  $('#btn').click(function() {
+    var textData = JSON.stringify({"name":$('#name').val()});
+
+    $.ajax({
+      url: '{{ url_for('getData') }}',
+      data: textData,
+      contentType: 'application/json;charset=UTF-8',
+      type: 'POST'
+    }).done(function(data){
+      console.log(data);
+    }).fail(function(){
+      console.log('fail');
+    });
+  })
+});
+</script>
+{% endblock scripts %}
