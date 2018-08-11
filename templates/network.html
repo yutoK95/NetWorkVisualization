@@ -6,7 +6,76 @@
 <div class="container">
     <div class="page-header">
     <h1>Tag Network</h1>
-    <img src="../static/pic/tagnet.png">
+    <button id = "get"> get </button>
+    <button id = "show"> Show </button>
+    <!--<img src="../static/pic/tagnet.png">-->
     </div>
+    <div id = "graph"></div>
 </div>
+{% endblock %}
+
+
+{% block scripts %}
+{{ super() }}
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script>
+var network_json;
+var newSVG =d3.select("#graph")
+    .append("svg")
+    .attr("width", 1000)
+    .attr("height",1000)
+$(function() {
+  $('#get').click(function(e){
+    //$(this).text("Clicked");
+    //ここから 左のコードに合わせてボタンから呼び出し、データの受け取り
+    $.ajax({
+      url: '{{ url_for('getnetwork') }}',
+      data: network_json,
+      contentType: 'application/json;charset=UTF-8',
+      type: 'POST'
+    }).done(function(){
+      console.log('OK!');
+
+    }).fail(function(){
+      console.log('fail');
+    });
+    //ここまで
+  });
+});
+
+//json
+var data = {
+  "name":"Jon",
+  "age":"21"
+}
+
+$(function() {
+  $('#show').click(function(e){
+    //$(this).text("Clicked");
+    //ここから 左のコードに合わせてボタンから呼び出し、データの受け取り
+
+    $.ajax({
+      url: '{{ url_for('getjson') }}',
+
+      contentType: 'application/json;charset=UTF-8',
+      type: 'POST'
+    }).done(function(){
+      console.log('done');
+
+      newSVG.append("circle")
+          .style("stroke", "gray")
+          .style("fill", "white")
+          .attr("r", 40)
+          .attr("cx", 50)
+          .attr("cy", 50)
+          .on("mouseover", function(){d3.select(this).style("fill", "aliceblue");})
+          .on("mouseout", function(){d3.select(this).style("fill", "white");});
+    }).fail(function(){
+      console.log('fail');
+    });
+    //ここまで
+  });
+});
+
+</script>
 {% endblock %}
